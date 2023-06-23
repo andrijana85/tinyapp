@@ -32,8 +32,10 @@
               <td>
                 <%= urls[id] %>
               </td>
+              <form method="POST" action="/urls/<%= id %>/delete">
             </tr>
             <% } %>
+          </form>
         </tbody>
       </table>
     </main>
