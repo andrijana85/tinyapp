@@ -5,6 +5,19 @@ const PORT = 8080; // default port 8080
 
 app.set("view engine", "ejs");
 
+
+
+// eslint-disable-next-line func-style
+function generateRandomString() {
+  let characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let shortURL = '';
+  for (let i = 0; i <= 5; i++) {
+    let rendChar = Math.floor(Math.random() * characters.length);
+    shortURL += characters.charAt(rendChar);
+  }
+  return shortURL;
+}
+
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
