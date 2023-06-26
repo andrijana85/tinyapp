@@ -2,12 +2,12 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 
-
+//set ejs as view engine
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
 
-
+//implement a function that returns a string of 6 random alphanumeric characters
 const generateRandomString = function() {
   let characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let shortURL = '';
@@ -27,6 +27,7 @@ const urlDatabase = {
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
+//render list of longURL with their shortURL
 app.get("/urls",(req, res) => {
   const templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
@@ -34,9 +35,11 @@ app.get("/urls",(req, res) => {
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
+//render new URL form
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
+//redirect the user to a new page that shows them the new short url they created
 app.get("/urls/:id", (req, res) => {
   const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id] };
   res.render("urls_show", templateVars);
