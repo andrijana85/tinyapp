@@ -23,7 +23,7 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-
+//route to root
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -47,12 +47,14 @@ app.get("/urls/:id", (req, res) => {
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
+//create new URL
 app.post("/urls", (req, res) => {
   const longURL = req.body;
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = longURL['longURL'];
   res.redirect(`urls/${shortURL}`); // update the redirection URL
 });
+//route to longURL
 app.get("/u/:shortId", (req, res) => {
   const shortURL = req.params.id;
   console.log(shortURL);
@@ -60,9 +62,24 @@ app.get("/u/:shortId", (req, res) => {
   console.log(shortURL);
   res.redirect(longURL);
 });
+//delete URL
 app.post("/urls/:shortURL/delete", (req, res) => {
   const shortURL = req.params.shortURL;
   delete urlDatabase[shortURL];
+  res.redirect("/urls");
+});
+//route to EditURL
+app.post("/urls/:shortURL/edit", (req, res) => {
+  const shortURL = req.params.shortURL;
+  res.redirect(`/urls${shortURL}`);
+});
+//Edit URL
+app.post("/urls/:shortURL/submit", (req, res) => {
+  const shortURL = req.params.shortURL;
+  const newURL = req.params.newURL;
+  if (urlDatabase[shortURL]) {
+    urlDatabase[shortURL] = newURL;
+  }
   res.redirect("/urls");
 });
 app.get("/u/:id", (req, res) => {
