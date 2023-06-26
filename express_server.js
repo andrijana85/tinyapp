@@ -7,8 +7,8 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
 
-// eslint-disable-next-line func-style
-function generateRandomString() {
+
+const generateRandomString = function() {
   let characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let shortURL = '';
   for (let i = 0; i <= 5; i++) {
@@ -16,7 +16,7 @@ function generateRandomString() {
     shortURL += characters.charAt(rendChar);
   }
   return shortURL;
-}
+};
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -46,18 +46,27 @@ app.get("/hello", (req, res) => {
 });
 app.post("/urls", (req, res) => {
   const longURL = req.body;
-  let shortId = generateRandomString();
-  urlDatabase[shortId] = longURL['longURL'];
-  res.redirect(`urls/${shortId}`); // update the redirection URL
+  let shortURL = generateRandomString();
+  urlDatabase[shortURL] = longURL['longURL'];
+  res.redirect(`urls/${shortURL}`); // update the redirection URL
 });
 app.get("/u/:shortId", (req, res) => {
-  const shortId = req.params.id;
-  console.log(shortId);
-  const longURL = urlDatabase[shortId];
-  console.log(shortId);
+  const shortURL = req.params.id;
+  console.log(shortURL);
+  const longURL = urlDatabase[shortURL];
+  console.log(shortURL);
   res.redirect(longURL);
 });
-
+app.post("/urls/:shortURL/delete", (req, res) => {
+  const shortURL = req.params.shortURL;
+  delete urlDatabase[shortURL];
+  res.redirect("/urls");
+});
+app.get("/u/:id", (req, res) => {
+  const shortURL = req.params.id;
+  const longURL = urlDatabase[shortURL];
+  res.redirect(longURL);
+});
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
