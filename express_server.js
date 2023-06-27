@@ -87,7 +87,7 @@ app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[shortURL];
   res.redirect(longURL);
 });
-//
+//Login route
 app.post("/login", (req, res) => {
   const username = req.body.username;
   res.cookie('username', username);
