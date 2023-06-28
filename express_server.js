@@ -128,10 +128,18 @@ app.post("/logout", (req, res) => {
   res.clearCookie("username");
   res.redirect("/urls");
 });
+
 //registration handler for new user
 app.post("/register", (req, res) => {
+// const email = req.body.email;
+// const password = req.body.password;
   const {email, password} = req.body;
-  res.send(`Form submitted ${email} ${password}`);
+
+  const id = generateRandomString();
+  users[id] = {id, email, password};
+  // console.log(users);
+  res.cookie("user_id", id);
+  res.redirect("/urls");
 });
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
