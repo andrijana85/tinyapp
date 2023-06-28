@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 //implement a function that returns a string of 6 random alphanumeric characters
-const generateRandomString = function () {
+const generateRandomString = function() {
   let characters =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let shortURL = "";
