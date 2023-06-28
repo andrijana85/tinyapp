@@ -61,6 +61,10 @@ app.get("/urls/shortURL", (req, res) => {
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
+//register page
+app.get("/register", (req, res) => {
+  res.render("register");
+});
 //create new URL
 app.post("/urls", (req, res) => {
   const longURL = req.body;
