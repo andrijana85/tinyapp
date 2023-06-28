@@ -20,6 +20,15 @@ const generateRandomString = function() {
   return shortURL;
 };
 
+const getUserByEmail = function(email, users) {
+  let user;
+  for (const id in users) {
+    if (users[id].email === email) {
+      user = user[id];
+    }
+  }
+}
+
 const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
@@ -140,8 +149,12 @@ app.post("/register", (req, res) => {
 
   if (email === " " && password === " ") {
     res.status(400).send("Please don't leave any field empty");
+    return;
   }
-
+  if (generateRandomString(email, users)) {
+    res.status(400).send("This email is already used");
+  }
+  
   const id = generateRandomString();
   users[id] = {id, email, password};
   // console.log(users);
