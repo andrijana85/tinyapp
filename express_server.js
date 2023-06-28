@@ -44,8 +44,9 @@ app.get("/", (req, res) => {
 });
 //render list of longURL with their shortURL
 app.get("/urls", (req, res) => {
+  const user = users[req.cookies.user_id];
   const templateVars = {
-    username: req.cookies.username,
+    user: user,
     urls: urlDatabase,
   };
   console.log(templateVars);
@@ -56,18 +57,20 @@ app.get("/urls.json", (req, res) => {
 });
 //render new URL form
 app.get("/urls/new", (req, res) => {
+  const user = users[req.cookies.user_id];
   const templateVars = {
-    username: req.cookies.username,
+    user: user,
     urls: urlDatabase
   };
   res.render("urls_new", templateVars);
 });
 //redirect the user to a new page that shows them the new short url they created
 app.get("/urls/shortURL", (req, res) => {
+  const user = users[req.cookies.user_id];
   const templateVars = {
     id: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    username: req.cookies.username,
+    user: user,
   };
   res.render("urls_show", templateVars);
 });
@@ -125,7 +128,7 @@ app.post("/login", (req, res) => {
   res.redirect("/urls");
 });
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect("/urls");
 });
 
