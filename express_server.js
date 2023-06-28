@@ -138,9 +138,14 @@ app.post("/register", (req, res) => {
 // const password = req.body.password;
   const {email, password} = req.body;
 
+  if (email === " " && password === " ") {
+    res.status(400).send("Please don't leave any field empty");
+  }
+
   const id = generateRandomString();
   users[id] = {id, email, password};
   // console.log(users);
+
   res.cookie("user_id", id);
   res.redirect("/urls");
   
