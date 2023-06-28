@@ -140,6 +140,7 @@ app.post("/register", (req, res) => {
   // console.log(users);
   res.cookie("user_id", id);
   res.redirect("/urls");
+  
 });
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
