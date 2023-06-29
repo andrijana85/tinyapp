@@ -91,6 +91,9 @@ app.get("/hello", (req, res) => {
 app.get("/register", (req, res) => {
   res.render("register");
 });
+app.get("/login", (req, res) => {
+  res.render("login");
+});
 //create new URL
 app.post("/urls", (req, res) => {
   const longURL = req.body;
