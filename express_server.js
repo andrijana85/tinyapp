@@ -27,7 +27,8 @@ const getUserByEmail = function(email, users) {
       user = user[id];
     }
   }
-}
+  return user;
+};
 
 const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
@@ -147,14 +148,14 @@ app.post("/register", (req, res) => {
 // const password = req.body.password;
   const {email, password} = req.body;
 
-  if (email === " " && password === " ") {
+  if (email === " " || password === " ") {
     res.status(400).send("Please don't leave any field empty");
     return;
   }
-  if (generateRandomString(email, users)) {
+  if (getUserByEmail(email, users)) {
     res.status(400).send("This email is already used");
   }
-  
+
   const id = generateRandomString();
   users[id] = {id, email, password};
   // console.log(users);
