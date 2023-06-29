@@ -136,8 +136,16 @@ app.get("/u/:id", (req, res) => {
 });
 //Login route
 app.post("/login", (req, res) => {
-  const username = req.body.username;
-  res.cookie("username", username);
+  const {email, password} = req.body;
+  if (!getUserByEmail(email, users)) {
+    res.status(403).send("This email cannot be found");
+  }
+  const user = getUserByEmail(email, users);
+
+  if (user.password !== password) {
+    res.status(403).send("Password is not correct!");
+  }
+  res.cookie("user_id", user.id);
   res.redirect("/urls");
 });
 app.post("/logout", (req, res) => {
