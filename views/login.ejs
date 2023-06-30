@@ -12,12 +12,12 @@
   <%- include('partials/_header') %>
   <form method="POST" action="/login">
     <label for="email" >Email</label>
-    <input type="text" name="email"/>
-
+    <input type="text" name="email" class="form-control" placeholder="Enter email" style="width: 300px"/>
+<br>
     <label for="password">Password</label>
-    <input type="password" name="password"/>
-
-    <button type="submit">Login</button>
+    <input type="password" name="password" placeholder="Password" class="form-control" style="width: 300px"/>
+<br>
+    <button type="submit" class="btn btn-primary">Login</button>
 
   </form>
   <!-- Bootstrap JS -->
