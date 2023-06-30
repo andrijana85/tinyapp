@@ -41,11 +41,11 @@ const users = {
     email: "user@example.com",
     password: "purple-monkey-dinosaur",
   },
-  // user2RandomID: {
-  //   id: "user2RandomID",
-  //   email: "user2@example.com",
-  //   password: "dishwasher-funk",
-  // },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
 };
 
 //route to root
@@ -55,6 +55,9 @@ app.get("/", (req, res) => {
 //render list of longURL with their shortURL
 app.get("/urls", (req, res) => {
   const user = users[req.cookies.user_id];
+  if (!user) {
+    return res.redirect("/login");
+  }
   const templateVars = {
     user: user,
     urls: urlDatabase,
@@ -75,7 +78,7 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
 //redirect the user to a new page that shows them the new short url they created
-app.get("/urls/shortURL", (req, res) => {
+app.get("/urls/:shortURL", (req, res) => {
   const user = users[req.cookies.user_id];
   const templateVars = {
     id: req.params.shortURL,
@@ -84,30 +87,25 @@ app.get("/urls/shortURL", (req, res) => {
   };
   res.render("urls_show", templateVars);
 });
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
 //register page
 app.get("/register", (req, res) => {
-  res.render("register");
+  const templateVars = {
+    user: null
+  };
+  res.render("register",templateVars);
 });
 app.get("/login", (req, res) => {
-  res.render("login");
+  const templateVars = {
+    user: null
+  };
+  res.render("login",templateVars);
 });
 //create new URL
 app.post("/urls", (req, res) => {
-  const longURL = req.body;
+  const longURL = req.body.longURL;
   let shortURL = generateRandomString();
-  urlDatabase[shortURL] = longURL["longURL"];
+  urlDatabase[shortURL] = longURL;
   res.redirect(`urls/${shortURL}`); // update the redirection URL
-});
-//route to longURL
-app.get("/u/:shortId", (req, res) => {
-  const shortURL = req.params.id;
-  console.log(shortURL);
-  const longURL = urlDatabase[shortURL];
-  console.log(shortURL);
-  res.redirect(longURL);
 });
 //delete URL
 app.post("/urls/:shortURL/delete", (req, res) => {
@@ -115,15 +113,10 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[shortURL];
   res.redirect("/urls");
 });
-//route to EditURL
+//Edit URL
 app.post("/urls/:shortURL/edit", (req, res) => {
   const shortURL = req.params.shortURL;
-  res.redirect(`/urls${shortURL}`);
-});
-//Edit URL
-app.post("/urls/:shortURL/submit", (req, res) => {
-  const shortURL = req.params.shortURL;
-  const newURL = req.params.newURL;
+  const newURL = req.body.newURL;
   if (urlDatabase[shortURL]) {
     urlDatabase[shortURL] = newURL;
   }
@@ -167,9 +160,10 @@ app.post("/register", (req, res) => {
     res.status(400).send("This email is already used");
   }
 
+
   const id = generateRandomString();
   users[id] = {id, email, password};
-  // console.log(users);
+  
 
   res.cookie("user_id", id);
   res.redirect("/urls");
