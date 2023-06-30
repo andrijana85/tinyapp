@@ -34,29 +34,23 @@
               </td>
               <form method="GET" action="/urls/<%= id %>">
                 <td>
-                  <button 
-                  type="submit"
-                  class="btn btn-primary"
-                  style="background-color:white;
+                  <button type="submit" class="btn btn-primary" style="background-color:white;
                   color:rgb(30, 144, 255);
                   border-color:deepskyblue">Edit</button>
                 </td>
               </form>
-            
+
               <form method="POST" action="/urls/<%= id %>/delete">
                 <td>
-                  <button 
-                    type="submit" 
-                    class="btn btn-primary"
-                    style="background-color: rgb(247, 252, 252); 
+                  <button type="submit" class="btn btn-primary" style="background-color: rgb(247, 252, 252); 
                                 color: rgb(255, 68, 0); 
                                 border-color: rgb(247, 57, 14);">
-                      Delete
-                    </button>
+                    Delete
+                  </button>
                 </td>
-            <% } %>
-          </form>
-        </tr>
+                <% } %>
+              </form>
+            </tr>
         </tbody>
       </table>
     </main>
