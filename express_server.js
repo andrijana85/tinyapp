@@ -94,7 +94,7 @@ app.get("/urls/new", (req, res) => {
   if (req.session.user_id) {
     res.render("urls/new", templateVars);
   } else {
-    res.redirect("/login");
+    res.redirect("/login", {user: null});
   }
 });
 
@@ -145,7 +145,10 @@ app.post("/urls", (req, res) => {
   }
   const longURL = req.body.longURL;
   let shortURL = generateRandomString();
-  urlDatabase[shortURL] = longURL;
+  urlDatabase[shortURL] = {
+    longURL: longURL,
+    userID: userID
+  };
   res.redirect(`urls/${shortURL}`); // update the redirection URL
 });
 
@@ -169,7 +172,7 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 //Route to longURL
 app.get("/u/:id", (req, res) => {
   const shortURL = req.params.id;
-  const longURL = urlDatabase[shortURL];
+  const longURL = urlDatabase[shortURL].longURL;
   //if the id does not exist send the error message
   if (!urlDatabase[shortURL]) {
     res.status(404).send("Page is not found!");
