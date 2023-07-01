@@ -79,11 +79,11 @@ app.get("/urls.json", (req, res) => {
 //render new URL form
 app.get("/urls/new", (req, res) => {
   const user = users[req.cookies.user_id];
-  const templateVars = {
-    user: user,
-    urls: urlDatabase
-  };
-  res.render("urls_new", templateVars);
+  if (req.cookies.user_id) {
+    res.render("urls/new", {user});
+  } else {
+    res.render("login", {user: null});
+  }
 });
 
 //redirect the user to a new page that shows them the new short url they created
