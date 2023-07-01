@@ -1,8 +1,9 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcryptjs");
 const app = express();
 const PORT = 8080; // default port 8080
-
+const SALT = 10;
 //set ejs as view engine
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -187,11 +188,16 @@ app.post("/register", (req, res) => {
   }
   if (getUserByEmail(email, users)) {
     res.status(400).send("This email is already used");
+    return;
   }
 
 
   const id = generateRandomString();
-  users[id] = {id, email, password};
+  //
+  const salt = bcrypt.hashSync(SALT);
+  const hashedPassword = bcrypt.hashSync(password, salt);
+
+  users[id] = {id, email, password: hashedPassword};
   
 
   res.cookie("user_id", id);
