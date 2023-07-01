@@ -59,12 +59,16 @@ const users = {
 
 //route to root
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  const userID = req.session.userID;
+  if (!userID) {
+    res.redirect("/login");
+  }
+  res.redirect("/urls");
 });
 
 //all urls
 app.get("/urls", (req, res) => {
-  const user = users[req.cookies.user_id];
+  const user = users[req.session.user_id];
   if (!user) {
     return res.redirect("/login");
   }
@@ -83,11 +87,11 @@ app.get("/urls.json", (req, res) => {
 
 //render new URL form
 app.get("/urls/new", (req, res) => {
-  const user = users[req.cookies.user_id];
+  const user = users[req.session.user_id];
   let templateVars = {
     user: user,
   };
-  if (req.cookies.user_id) {
+  if (req.session.user_id) {
     res.render("urls/new", templateVars);
   } else {
     res.redirect("/login");
@@ -96,7 +100,7 @@ app.get("/urls/new", (req, res) => {
 
 //redirect the user to a new page that shows them the new short url they created
 app.get("/urls/:shortURL", (req, res) => {
-  const user = users[req.cookies.user_id];
+  const user = users[req.session.user_id];
   const templateVars = {
     id: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
@@ -107,23 +111,35 @@ app.get("/urls/:shortURL", (req, res) => {
 
 //register page
 app.get("/register", (req, res) => {
+  const userID = req.session.user_id;
+
   const templateVars = {
     user: null
   };
-  res.render("register",templateVars);
+  if (userID) {
+    res.redirect("/urls");
+  } else {
+    res.render("register",templateVars);
+  }
 });
 
 //login page
 app.get("/login", (req, res) => {
+  const userID = req.session.user_id;
+
   const templateVars = {
     user: null
   };
-  res.render("login",templateVars);
+  if (userID) {
+    res.redirect("/urls");
+  } else {
+    res.render("login",templateVars);
+  }
 });
 
 //Create new URL
 app.post("/urls", (req, res) => {
-  const userID = req.cookies.user_id;
+  const userID = req.session.user_id;
   if (!userID) {
     res.status(403).send("You must be logged in to a valid account to create short URLs.");
   }
