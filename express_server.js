@@ -1,7 +1,7 @@
 const express = require("express");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
-const getUserByEmail = require("./helpers");
+const { getUserByEmail } = require("./helpers");
 const app = express();
 const PORT = 8080; // default port 8080
 const SALT = 10;
@@ -61,6 +61,7 @@ app.get("/", (req, res) => {
 
 //all urls
 app.get("/urls", (req, res) => {
+  //set cookie, and declare user variable with maching cookie
   const user = users[req.session.user_id];
   if (!user) {
     return res.redirect("/login");
@@ -84,6 +85,7 @@ app.get("/urls/new", (req, res) => {
   let templateVars = {
     user: user,
   };
+  //only logged in users can create new url
   if (req.session.user_id) {
     res.render("urls/new", templateVars);
   } else {
@@ -109,6 +111,7 @@ app.get("/register", (req, res) => {
   const templateVars = {
     user: null
   };
+  //redirect logged in users to urls page
   if (userID) {
     res.redirect("/urls");
   } else {
@@ -123,6 +126,7 @@ app.get("/login", (req, res) => {
   const templateVars = {
     user: null
   };
+  //redirect logged in users to urls page
   if (userID) {
     res.redirect("/urls");
   } else {
@@ -133,6 +137,7 @@ app.get("/login", (req, res) => {
 //Create new URL
 app.post("/urls", (req, res) => {
   const userID = req.session.user_id;
+  //if user is not in database, deny access
   if (!userID) {
     res.status(403).send("You must be logged in to a valid account to create short URLs.");
   }
@@ -203,22 +208,23 @@ app.post("/logout", (req, res) => {
 //Registration handler for new user
 app.post("/register", (req, res) => {
   const {email, password} = req.body;
-
+  //if email or password is empty, deny acces
   if (email === " " || password === " ") {
     res.status(400).send("Please don't leave any field empty");
     return;
   }
+  //if email is already used, deny acces
   if (getUserByEmail(email, users)) {
     res.status(400).send("This email is already used");
     return;
   }
 
-
+  //create rendom id
   const id = generateRandomString();
-  
+  // encrypting password
   const salt = bcrypt.hashSync(SALT);
   const hashedPassword = bcrypt.hashSync(password, salt);
-
+  //new user object
   users[id] = {id, email, password: hashedPassword};
   
 
