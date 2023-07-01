@@ -1,5 +1,5 @@
 const express = require("express");
-const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-Session");
 const bcrypt = require("bcryptjs");
 const app = express();
 const PORT = 8080; // default port 8080
@@ -7,7 +7,11 @@ const SALT = 10;
 //set ejs as view engine
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieSession({
+  name: "myCookieSession",
+  keys:["my-secret-word"],
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
 
 //implement a function that returns a string of 6 random alphanumeric characters
 const generateRandomString = function() {
@@ -153,6 +157,7 @@ app.get("/u/:id", (req, res) => {
   //if the id does not exist send the error message
   if (!urlDatabase[shortURL]) {
     res.status(404).send("Page is not found!");
+    return;
   }
   res.redirect(longURL);
 });
@@ -162,6 +167,7 @@ app.post("/login", (req, res) => {
   const {email, password} = req.body;
   if (!getUserByEmail(email, users)) {
     res.status(403).send("This email cannot be found");
+    return;
   }
   const user = getUserByEmail(email, users);
 
@@ -197,7 +203,7 @@ app.post("/register", (req, res) => {
 
 
   const id = generateRandomString();
-  //
+  
   const salt = bcrypt.hashSync(SALT);
   const hashedPassword = bcrypt.hashSync(password, salt);
 
