@@ -165,8 +165,12 @@ app.post("/login", (req, res) => {
   }
   const user = getUserByEmail(email, users);
 
-  if (user.password !== password) {
-    res.status(403).send("Password is not correct!");
+  //Use bcrypt When Checking Passwords
+  const isMatch = bcrypt.compareSync(password, user.password);
+
+  if (!isMatch) {
+    res.status(401).send("Password is incorrect");
+    return;
   }
   res.cookie("user_id", user.id);
   res.redirect("/urls");
