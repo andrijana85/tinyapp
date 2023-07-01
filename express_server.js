@@ -2,7 +2,7 @@ const express = require("express");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcrypt");
 
-const { getUserByEmail } = require("./helpers");
+const { getUserByEmail, generateRandomString } = require("./helpers.js");
 
 const app = express();
 const PORT = 8080; // default port 8080
@@ -16,19 +16,6 @@ app.use(cookieSession({
   keys:["my-secret-word"],
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
-
-//implement a function that returns a string of 6 random alphanumeric characters
-const generateRandomString = function() {
-  let characters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let shortURL = "";
-  for (let i = 0; i <= 5; i++) {
-    let rendChar = Math.floor(Math.random() * characters.length);
-    shortURL += characters.charAt(rendChar);
-  }
-  return shortURL;
-};
-
 
 
 // DATABASES //
