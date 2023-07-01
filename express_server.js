@@ -142,6 +142,10 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 app.get("/u/:id", (req, res) => {
   const shortURL = req.params.id;
   const longURL = urlDatabase[shortURL];
+  //if the id does not exist send the error message
+  if (!urlDatabase[shortURL]) {
+    res.status(404).send("Page is not found!");
+  }
   res.redirect(longURL);
 });
 
