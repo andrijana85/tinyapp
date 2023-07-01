@@ -1,5 +1,5 @@
 const express = require("express");
-const cookieSession = require("cookie-Session");
+const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
 const app = express();
 const PORT = 8080; // default port 8080
