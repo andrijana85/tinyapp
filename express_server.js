@@ -79,10 +79,13 @@ app.get("/urls.json", (req, res) => {
 //render new URL form
 app.get("/urls/new", (req, res) => {
   const user = users[req.cookies.user_id];
+  let templateVars = {
+    user: user,
+  };
   if (req.cookies.user_id) {
-    res.render("urls/new", {user});
+    res.render("urls/new", templateVars);
   } else {
-    res.render("login", {user: null});
+    res.redirect("/login");
   }
 });
 
@@ -115,6 +118,10 @@ app.get("/login", (req, res) => {
 
 //Create new URL
 app.post("/urls", (req, res) => {
+  const userID = req.cookies.user_id;
+  if (!userID) {
+    res.status(403).send("You must be logged in to a valid account to create short URLs.");
+  }
   const longURL = req.body.longURL;
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = longURL;
