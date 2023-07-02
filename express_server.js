@@ -176,10 +176,9 @@ app.post("/login", (req, res) => {
     res.status(404).send("This email cannot be found");
     return;
   }
-  const hashedPassword = bcrypt.hashSync(password, SALT);
   
   //Use bcrypt When Checking Passwords
-  const isMatch = bcrypt.compareSync(hashedPassword, user.password);
+  const isMatch = bcrypt.compareSync(password, user.password);
   if (!isMatch) {
     res.status(403).send("Password is incorrect");
     return;
