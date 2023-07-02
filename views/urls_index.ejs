@@ -30,9 +30,9 @@
                 <%= id %>
               </td>
               <td>
-                <%= urls[id] %>
+                <%= urls[id].longURL %>
               </td>
-              <form method="GET" action="/urls/<%= id %>">
+              <form method="GET" action="/urls/<%= id %>/edit">
                 <td>
                   <button type="submit" class="btn btn-primary" style="background-color:white;
                   color:rgb(30, 144, 255);
