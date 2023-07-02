@@ -57,7 +57,6 @@ app.get("/urls", (req, res) => {
     user: user,
     urls: urlDatabase,
   };
-  console.log(templateVars);
   res.render("urls_index", templateVars);
 });
 
@@ -76,17 +75,22 @@ app.get("/urls/new", (req, res) => {
   if (req.session["user_id"]) {
     res.render("urls_new", templateVars);
   } else {
-    res.redirect("/login", {user: null});
+    res.render("login", {user: null});
   }
 });
 
 //redirect the user to a new page that shows them the new short url they created
-app.get("/urls/:shortURL", (req, res) => {
+app.get("/urls/:id", (req, res) => {
   const user = users[req.session["user_id"]];
-  console.log({user}, req.params.shortURL, req.session["user_id"]);
+  const id = req.params.id;
+  const url = urlDatabase[id];
+
+  if (!url) {
+    return res.status(404).send("URL is not found!");
+  }
   const templateVars = {
-    id: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL].longURL,
+    id: id,
+    longURL: url.longURL,
     user: user,
   };
   res.render("urls_show", templateVars);
@@ -135,7 +139,7 @@ app.post("/urls", (req, res) => {
     longURL: longURL,
     userID: userID
   };
-  res.redirect(`urls/${shortURL}`); // update the redirection URL
+  res.redirect(`/urls/${shortURL}`); // update the redirection URL
 });
 
 //Delete URL
@@ -148,38 +152,34 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 //Edit URL
 app.post("/urls/:shortURL/edit", (req, res) => {
   const shortURL = req.params.shortURL;
-  const newURL = req.body.newURL;
-  if (urlDatabase[shortURL]) {
-    urlDatabase[shortURL] = newURL;
-  }
-  res.redirect("/urls");
+  res.redirect(`/urls/${shortURL}`);
 });
 
 //Route to longURL
 app.get("/u/:id", (req, res) => {
   const shortURL = req.params.id;
-  const longURL = urlDatabase[shortURL].longURL;
+  
   //if the id does not exist send the error message
   if (!urlDatabase[shortURL]) {
-    res.status(404).send("Page is not found!");
-    return;
+    return res.status(404).send("Page is not found!");
   }
+  const longURL = urlDatabase[shortURL].longURL;
   res.redirect(longURL);
 });
 
 //Login route
 app.post("/login", (req, res) => {
   const {email, password} = req.body;
+  //declare variable to store the found user
   const user = getUserByEmail(email, users);
   if (!user) {
     res.status(404).send("This email cannot be found");
     return;
   }
   const hashedPassword = bcrypt.hashSync(password, SALT);
-  console.log(hashedPassword);
+  
   //Use bcrypt When Checking Passwords
   const isMatch = bcrypt.compareSync(hashedPassword, user.password);
-  console.log(isMatch);
   if (!isMatch) {
     res.status(403).send("Password is incorrect");
     return;
@@ -210,8 +210,8 @@ app.post("/register", (req, res) => {
 
   //create rendom id
   const id = generateRandomString();
-  
-  const hashedPassword = bcrypt.hashSync(password, SALT);
+  const salt = bcrypt.genSaltSync(SALT);
+  const hashedPassword = bcrypt.hashSync(password, salt);
   //new user object
   users[id] = {id, email, password: hashedPassword};
   
