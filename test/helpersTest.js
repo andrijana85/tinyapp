@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const { getUserByEmail } = require("../helpers");
+const { getUserByEmail , generateRandomString} = require("../helpers");
 
 const testUsers = {
   "userRandomID": {
@@ -18,11 +18,16 @@ describe('getUserByEmail', function() {
   it('should return a user with valid email', function() {
     const user = getUserByEmail("user@example.com", testUsers);
     const expectedUserID = "userRandomID";
-    assert.equal(user, expectedUserID);
+    assert.equal(user.id, expectedUserID);
   });
   it("should return undefined for the email that is not in database", function() {
     const user = getUserByEmail("user1@example.com", testUsers);
     const expectedUserID = undefined;
     assert.equal(user, expectedUserID);
+  });
+  it('should return a string with six characters', function() {
+    const randomStringLength = generateRandomString().length;
+    const expectedOutput = 6;
+    assert.equal(randomStringLength, expectedOutput);
   });
 });
