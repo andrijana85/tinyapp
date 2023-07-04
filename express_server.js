@@ -197,7 +197,7 @@ app.post("/logout", (req, res) => {
 app.post("/register", (req, res) => {
   const {email, password} = req.body;
   //if email or password is empty, deny acces
-  if (email === " " || password === " ") {
+  if (email === '' || password === '') {
     res.status(400).send("Please don't leave any field empty");
     return;
   }
