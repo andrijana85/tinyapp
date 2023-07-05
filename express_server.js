@@ -150,20 +150,20 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 });
 
 //Edit URL
-app.post("/urls/:shortURL/edit", (req, res) => {
-  const shortURL = req.params.shortURL;
-  res.redirect(`/urls/${shortURL}`);
+app.post("/urls/:id/edit", (req, res) => {
+  const id = req.params.id;
+  res.redirect(`/urls/${id}`);
 });
 
 //Route to longURL
 app.get("/u/:id", (req, res) => {
-  const shortURL = req.params.id;
+  const id = req.params.id;
   
   //if the id does not exist send the error message
-  if (!urlDatabase[shortURL]) {
+  if (!urlDatabase[id]) {
     return res.status(404).send("Page is not found!");
   }
-  const longURL = urlDatabase[shortURL].longURL;
+  const longURL = urlDatabase[id].longURL;
   res.redirect(longURL);
 });
 
