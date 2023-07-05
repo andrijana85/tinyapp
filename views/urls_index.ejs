@@ -32,13 +32,12 @@
               <td>
                 <%= urls[id].longURL %>
               </td>
-              <form method="GET" action="/urls/<%= id %>/edit">
                 <td>
-                  <button type="submit" class="btn btn-primary" style="background-color:white;
+                  <a href="/urls/<%= id %>" class="btn btn-primary" style="background-color:white;
                   color:rgb(30, 144, 255);
-                  border-color:deepskyblue">Edit</button>
+                  border-color:deepskyblue">Edit</a>
                 </td>
-              </form>
+              
 
               <form method="POST" action="/urls/<%= id %>/delete">
                 <td>
