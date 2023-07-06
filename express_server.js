@@ -154,6 +154,28 @@ app.post("/urls/:id/edit", (req, res) => {
   const id = req.params.id;
   res.redirect(`/urls/${id}`);
 });
+//Update an existing URL
+app.post("/urls/:id", (req, res) => {
+  const userID = req.session.user_id;
+  const id = req.params.id;
+  // check if user exists
+  if (!userID) {
+    return res.status(401).send("You must be logged in to do this action.");
+  }
+  //check if URL exist
+  if (!urlDatabase[id]) {
+    return res.status(404).send("Can't find the URL you are looking for!");
+  }
+  // check if url belongs to user
+  if (urlDatabase[id].userID !== userID) {
+    return res.status(403).send("You must be logged in to do this action.");
+  }
+
+  const newURL = req.body.newURL;
+  urlDatabase[id].longURL = newURL;
+
+  res.redirect("/urls");
+});
 
 
 //Route to longURL
