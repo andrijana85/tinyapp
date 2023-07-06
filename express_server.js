@@ -155,6 +155,7 @@ app.post("/urls/:id/edit", (req, res) => {
   res.redirect(`/urls/${id}`);
 });
 
+
 //Route to longURL
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;
@@ -189,7 +190,7 @@ app.post("/login", (req, res) => {
 
 //Logout
 app.post("/logout", (req, res) => {
-  req.session["user_id"] = null;
+  req.session = null;
   res.redirect("/login");
 });
 
